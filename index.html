@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muni university Project Dashboard | 13 Web Project Applications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4bb543;
+            --warning: #ffcc00;
+            --danger: #dc3545;
+            --gray: #6c757d;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: var(--shadow);
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 8px;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .search-bar i {
+            color: var(--gray);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stat-card i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .applications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .app-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .app-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .app-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .app-content {
+            padding: 0 20px 20px;
+        }
+
+        .app-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .app-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--light);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .app-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-active {
+            background: var(--success);
+        }
+
+        .status-inactive {
+            background: var(--gray);
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .applications-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-th-large"></i>
+                <h1>MUNI UNIVERSITY PROJECT DASHBOARD</h1>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search applications...">
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">NM</div>
+                <div>
+                    <div style="font-weight: 600;">MARION & SHINAH</div>
+                    <div style="font-size: 0.8rem; color: var(--gray);">Administrator</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <i class="fas fa-project-diagram"></i>
+                <div class="stat-value">13</div>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-value">9</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <div class="stat-value">53</div>
+                <div class="stat-label">Team Members</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-tasks"></i>
+                <div class="stat-value">87%</div>
+                <div class="stat-label">Progress</div>
+            </div>
+        </div>
+
+        <div class="applications-grid">
+            <!-- App 1 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #4361ee;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>LOST AND FOUND PORTAL</h3>
+                        <p>GROUP ONE</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A digital platform where students post and browse lost or found items on campus.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 2 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #3a0ca3;">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>STUDY GROUP FINDER</h3>
+                        <p>GROUP TWO</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A web app that connects students interested in the same course or topic.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://ogwaltonny.github.io/muni-university-group-finder/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 3 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #4cc9f0;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>CAMPUS EVENT HUB</h3>
+                        <p>GROUP THREE</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A centralized event listing app where clubs, departments and students can post and discover upcoming events on campus.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://abino-bit.github.io/Campus-events-locator/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 4 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #7209b7;">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>CLASS FEEDBACK SYSTEM</h3>
+                        <p>GROUP FOUR</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A simple, anonymous feedback platform that lets student submit evaluations for specific classes or lecturers.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://250120162-debug.github.io/student-class-feedback-system/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 5 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #f72585;">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>STUDENTS SKILL EXCHANGE</h3>
+                        <p>GROUP FIVE</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A web app to let students offer or request help in areas like tutoring,web design,or language exchange.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://atimakugladys3-prog.github.io/STUDENTS-SKILLS-EXCHANGE-_PROJECT/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 6 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #4895ef;">
+                        <i class="c:\Users\MARION\Desktop\OIP.webp"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>TIMETABLE & EXAMTIMETABLE COUNTDOWN</h3>
+                        <p>GROUP SIX</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A productivity tool where students can input their weekly schedule and upcoming exams.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://innocentnatuhwera79-bot.github.io/timetable/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 7 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #560bad;">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>UNIVERSITY Q & A FORUM</h3>
+                        <p>GROUP SEVEN</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A simpleforum for students to ask and answer questions related to university life,academics,housing,and more.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://university-q-and-a-app.web.app/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 8 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #b5179e;">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>MENTAL HEALTH RESOURCE APP</h3>
+                        <p>GROUP EIGHT</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A platform offering mental health tips,contact info for service,and a space to log moods.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 9 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #f15bb5;">
+                        <i class="c:\Users\MARION\Downloads\download.gif"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>MEAL PLANNER FOR HOSTEL STUDENTS</h3>
+                        <p>GROUP NINE</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">An app that displays the hostel dinning menu for the week andallows students to submit feedback or prefences.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn-class" onclick="window.open('https://sykar-web.github.io/campus-bite/')">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 10 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #fee440;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>DIGITAL SUGGESTION BOX</h3>
+                        <p>GROUP TEN</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A platform that provides away for students to send anonymous suggestions to university departments.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 11 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #00bbf9;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>CLUB & SOCIETY PORTAL</h3>
+                        <p>GROUP ELEVEN</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">A platform that show cases all students clubs and allows students to browse,join,or message clubs.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 12 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #00f5d4;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>ROOMATE FINDER</h3>
+                        <p>GROUP TWELVE</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">Aplatform that helps students find compatible roommates by matching based on living preferences,location,and bubget.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- App 13 -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon" style="background: #ff9e00;">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="app-info">
+                        <h3>ANONYMOUS PEER CONFESSION BOARD</h3>
+                        <p>GROUP THIRTEEN</p>
+                    </div>
+                </div>
+                <div class="app-content">
+                    <p class="app-description">Amoderated platform where students can share confessions,rants, or funny experiences anonymously.</p>
+                </div>
+                <div class="app-footer">
+                    <div class="app-status">
+                        <div class="status-dot status-active"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="app-actions">
+                        <button class="btn btn-primary">Open</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Project Dashboard &copy; 2025 | 13 Web Applications Connected</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add interactivity to the application cards
+        document.querySelectorAll('.app-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('btn')) {
+                    const appName = this.querySelector('h3').textContent;
+                    alert(`Opening ${appName}...`);
+                    // In a real application, this would navigate to the app
+                }
+            });
+        });
+
+        // Add functionality to the Open buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const appName = this.closest('.app-card').querySelector('h3').textContent;
+                alert(`Launching ${appName}...`);
+                // In a real application, this would navigate to the app
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.app-card').forEach(card => {
+                const appName = card.querySelector('h3').textContent.toLowerCase();
+                const appDescription = card.querySelector('.app-description').textContent.toLowerCase();
+                
+                if (appName.includes(searchTerm) || appDescription.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
